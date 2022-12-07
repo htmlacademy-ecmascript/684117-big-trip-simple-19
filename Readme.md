@@ -1,7 +1,7 @@
 # Проект «Большое путешествие (простой)»
 
 * Студент: [Егор Байдашев](https://up.htmlacademy.ru/ecmascript/19/user/684117).
-* Наставник: Дмитрий Гуляев (https://htmlacademy.ru/profile/id87930).
+* Наставник: [Дмитрий Гуляев](https://htmlacademy.ru/profile/id87930).
 
 ---
 
