@@ -3,6 +3,7 @@ import SortView from "./view/sort-view.js";
 //import PointListView from "./view/point-list-view.js";
 //import PointAddView from "./view/point-add-view.js";
 //import PointEditView from "./view/point-edit-view.js";
+//import PointView from "./view/point-view.js";
 import {render} from "./render.js";
 
 const siteHeader = document.querySelector('.page-header');
@@ -15,3 +16,4 @@ render(new SortView(), siteMainSection);
 //render(new PointListView(), siteMainSection);
 //render(new PointAddView(), siteMainSection);
 //render(new PointEditView(), siteMainSection);
+//render(new PointView(), siteMainSection);
