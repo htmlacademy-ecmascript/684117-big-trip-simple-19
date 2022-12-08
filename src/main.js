@@ -1,7 +1,7 @@
-import FilterView from "./view/filter-view.js";
-import SortView from "./view/sort-view.js";
-import {render} from "./render.js";
-import ListPresenter from "./presenter/list-presenter.js";
+import FilterView from './view/filter-view.js';
+import SortView from './view/sort-view.js';
+import {render} from './render.js';
+import ListPresenter from './presenter/list-presenter.js';
 
 const siteHeader = document.querySelector('.page-header');
 const siteFiltersElement = siteHeader.querySelector('.trip-controls__filters');
