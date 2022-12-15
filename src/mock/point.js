@@ -1,5 +1,5 @@
 import {getRandomArrayElement} from '../utils.js';
-import {TYPES as POINTTYPES} from '../const.js';
+import {POINT_TYPES} from '../const.js';
 
 const mockOffers = [
   {
@@ -142,29 +142,29 @@ const mockPoints = [
   {
     'base_price': 1100,
     'date_from': '2019-07-10T22:55:56.845Z',
-    'date_to': '2019-07-11T11:22:13.375Z',
+    'date_to': '2019-07-10T11:22:13.375Z',
     'destination': getRandomArrayElement(mockDestinations),
     'id': '1',
     'offers': getRandomArrayElement(mockOffers),
-    'type': getRandomArrayElement(POINTTYPES),
+    'type': getRandomArrayElement(POINT_TYPES),
   },
   {
     'base_price': 500,
     'date_from': '2019-07-11T11:55:56.845Z',
-    'date_to': '2019-07-12T15:22:13.375Z',
+    'date_to': '2019-07-11T15:22:13.375Z',
     'destination': getRandomArrayElement(mockDestinations),
     'id': '2',
     'offers': getRandomArrayElement(mockOffers),
-    'type': getRandomArrayElement(POINTTYPES),
+    'type': getRandomArrayElement(POINT_TYPES),
   },
   {
     'base_price': 2000,
     'date_from': '2019-08-10T10:55:56.845Z',
-    'date_to': '2019-08-11T11:22:13.375Z',
+    'date_to': '2019-08-10T11:22:13.375Z',
     'destination': getRandomArrayElement(mockDestinations),
     'id': '3',
     'offers': getRandomArrayElement(mockOffers),
-    'type': getRandomArrayElement(POINTTYPES),
+    'type': getRandomArrayElement(POINT_TYPES),
   },
   {
     'base_price': 333,
@@ -173,7 +173,7 @@ const mockPoints = [
     'destination': getRandomArrayElement(mockDestinations),
     'id': '4',
     'offers': getRandomArrayElement(mockOffers),
-    'type': getRandomArrayElement(POINTTYPES),
+    'type': getRandomArrayElement(POINT_TYPES),
   },
 ];
 
