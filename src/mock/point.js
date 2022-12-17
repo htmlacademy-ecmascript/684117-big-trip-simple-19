@@ -1,7 +1,7 @@
 import {getRandomArrayElement} from '../utils.js';
 import {POINT_TYPES} from '../const.js';
 
-const mockOffers = [
+const mockOffersByType = [
   {
     'type': 'taxi',
     'offers': [
@@ -143,42 +143,56 @@ const mockPoints = [
     'base_price': 1100,
     'date_from': '2019-07-10T22:55:56.845Z',
     'date_to': '2019-07-10T11:22:13.375Z',
-    'destination': getRandomArrayElement(mockDestinations),
+    'destination': getRandomArrayElement(mockDestinations).id,
     'id': '1',
-    'offers': getRandomArrayElement(mockOffers),
+    'offers': '',
     'type': getRandomArrayElement(POINT_TYPES),
   },
   {
     'base_price': 500,
     'date_from': '2019-07-11T11:55:56.845Z',
     'date_to': '2019-07-11T15:22:13.375Z',
-    'destination': getRandomArrayElement(mockDestinations),
+    'destination': getRandomArrayElement(mockDestinations).id,
     'id': '2',
-    'offers': getRandomArrayElement(mockOffers),
+    'offers': '',
     'type': getRandomArrayElement(POINT_TYPES),
   },
   {
     'base_price': 2000,
     'date_from': '2019-08-10T10:55:56.845Z',
     'date_to': '2019-08-10T11:22:13.375Z',
-    'destination': getRandomArrayElement(mockDestinations),
+    'destination': getRandomArrayElement(mockDestinations).id,
     'id': '3',
-    'offers': getRandomArrayElement(mockOffers),
+    'offers': '',
     'type': getRandomArrayElement(POINT_TYPES),
   },
   {
     'base_price': 333,
     'date_from': '2019-09-10T22:55:56.845Z',
     'date_to': '2019-09-11T21:22:13.375Z',
-    'destination': getRandomArrayElement(mockDestinations),
+    'destination': getRandomArrayElement(mockDestinations).id,
     'id': '4',
-    'offers': getRandomArrayElement(mockOffers),
+    'offers': '',
     'type': getRandomArrayElement(POINT_TYPES),
   },
 ];
 
+// function getRandomPoint() {
+//   return getRandomArrayElement(mockPoints);
+// }
+
 function getRandomPoint() {
-  return getRandomArrayElement(mockPoints);
+  const point = getRandomArrayElement(mockPoints);
+
+  point.offers = [getRandomArrayElement(mockOffersByType
+    .find((el) => el.type === point.type).offers
+    .map((offer) => (offer.id)))];
+
+  return point;
 }
+
+// const POINT_COUNT = 3;
+// const points = Array.from({length: POINT_COUNT}, getRandomPoint);
+// console.log(points);
 
 export {getRandomPoint};

@@ -4,11 +4,11 @@ import {humanizePointDate} from '../utils.js';
 
 function createPointTemplate(point) {
 
-  const {base_price, date_from, date_to, destination, type} = point;
+  const {basePrice = point.base_price, dateFrom = point.date_from, dateTo = point.date_to, destination, type} = point;
 
-  const datePoint = humanizePointDate(date_from, DateFormat.DATE_FORMAT);
-  const startTime = humanizePointDate(date_from, DateFormat.TIME_FORMAT);
-  const endTime = humanizePointDate(date_to, DateFormat.TIME_FORMAT);
+  const datePoint = humanizePointDate(dateFrom, DateFormat.DATE_FORMAT);
+  const startTime = humanizePointDate(dateFrom, DateFormat.TIME_FORMAT);
+  const endTime = humanizePointDate(dateTo, DateFormat.TIME_FORMAT);
 
   return (
     `<li class="trip-events__item">
@@ -26,7 +26,7 @@ function createPointTemplate(point) {
         </p>
       </div>
       <p class="event__price">
-        &euro;&nbsp;<span class="event__price-value">${base_price}</span>
+        &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
       </p>
       <h4 class="visually-hidden">Offers:</h4>
       <ul class="event__selected-offers">
