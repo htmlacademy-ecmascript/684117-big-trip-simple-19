@@ -1,4 +1,9 @@
-import {generateRandomPoint, generateDestinations, generateOffers, generateOffersByType, generateBlankPoint} from '../mock/point.js';
+import {
+  generateRandomPoint,
+  generateDestinations,
+  generateOffers,
+  generateOffersByType,
+  generateBlankPoint} from '../mock/point.js';
 
 const POINT_COUNT = 3;
 
