@@ -228,8 +228,21 @@ const mockPoints = [
   },
 ];
 
+const blankPoint = {
+  'base_price': 333,
+  'date_from': '2019-09-10T22:55:56.845Z',
+  'date_to': '2019-09-11T21:22:13.375Z',
+  'destination': getRandomArrayElement(mockDestinations).id,
+  'offers': '',
+  'type': getRandomArrayElement(POINT_TYPES),
+};
+
 function generateOffers() {
   return mockOffers;
+}
+
+function generateOffersByType() {
+  return mockOffersByType;
 }
 
 function generateDestinations() {
@@ -246,4 +259,12 @@ function generateRandomPoint() {
   return point;
 }
 
-export {generateRandomPoint, generateDestinations, generateOffers};
+function generateBlankPoint() {
+  blankPoint.offers = mockOffersByType
+    .find((el) => el.type === blankPoint.type).offers
+    .map((offer) => (offer.id));
+
+  return blankPoint;
+}
+
+export {generateRandomPoint, generateDestinations, generateOffers, generateOffersByType, generateBlankPoint};

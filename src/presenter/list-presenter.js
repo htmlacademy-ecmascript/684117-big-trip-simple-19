@@ -16,9 +16,11 @@ export default class ListPresenter {
     this.listPoints = [...this.pointsModel.getPoints()];
     this.destinations = [...this.pointsModel.getDestinations()];
     this.offers = [...this.pointsModel.getOffers()];
+    this.offersByType = [...this.pointsModel.getOffersByType()];
+    this.blankPoint = this.pointsModel.getBlankPoint();
 
     render(this.listComponent, this.listContainer);
-    render(new PointEditView(), this.listComponent.getElement());
+    render(new PointEditView({point: this.blankPoint, destinations: this.destinations, offers: this.offers, offersByType: this.offersByType}), this.listComponent.getElement());
     render(new PointAddView(), this.listComponent.getElement());
 
     for (let i = 0; i < this.listPoints.length; i++) {
