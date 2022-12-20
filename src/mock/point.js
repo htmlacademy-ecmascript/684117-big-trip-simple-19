@@ -6,7 +6,7 @@ const mockOffersByType = [
     'type': 'taxi',
     'offers': [
       {
-        'id': 1,
+        'id': 5,
         'title': 'Choose the radio station',
         'price': 60,
       },
@@ -36,12 +36,12 @@ const mockOffersByType = [
     'type': 'bus',
     'offers': [
       {
-        'id': 1,
+        'id': 2,
         'title': 'Add luggage',
         'price': 30,
       },
       {
-        'id': 2,
+        'id': 3,
         'title': 'Add meal',
         'price': 15,
       },
@@ -51,7 +51,7 @@ const mockOffersByType = [
     'type': 'train',
     'offers': [
       {
-        'id': 1,
+        'id': 3,
         'title': 'Add meal',
         'price': 15,
       },
@@ -66,7 +66,7 @@ const mockOffersByType = [
     'type': 'ship',
     'offers': [
       {
-        'id': 1,
+        'id': 4,
         'title': 'Choose seat',
         'price': 5,
       },
@@ -76,7 +76,7 @@ const mockOffersByType = [
     'type': 'drive',
     'offers': [
       {
-        'id': 1,
+        'id': 4,
         'title': 'Choose seat',
         'price': 5,
       },
@@ -84,21 +84,61 @@ const mockOffersByType = [
   },
   {
     'type': 'check-in',
-    'offers': null,
+    'offers': [
+      {
+        'id': 3,
+        'title': 'Add meal',
+        'price': 15,
+      },
+    ]
   },
   {
     'type': 'sightseeing',
-    'offers': null,
+    'offers': [
+      {
+        'id': 3,
+        'title': 'Add meal',
+        'price': 15,
+      },
+    ]
   },
   {
     'type': 'restaurant',
     'offers': [
       {
-        'id': 1,
+        'id': 4,
         'title': 'Choose seat',
         'price': 5,
       },
     ]
+  },
+];
+
+const mockOffers = [
+  {
+    'id': 1,
+    'title': 'Upgrade to a business class',
+    'price': 120,
+  },
+  {
+    'id': 2,
+    'title': 'Add luggage',
+    'price': 30,
+  },
+  {
+    'id': 3,
+    'title': 'Add meal',
+    'price': 15,
+  },
+  {
+    'id': 4,
+    'title': 'Choose seat',
+    'price': 5,
+  },
+  {
+    'id': 5,
+    'title': 'Choose the radio station',
+    'price': 60,
   },
 ];
 
@@ -133,6 +173,17 @@ const mockDestinations = [
       {
         'src': 'http://picsum.photos/300/200?r=0.0762563005163317',
         'description': 'Geneva parliament building'
+      }
+    ]
+  },
+  {
+    'id': 4,
+    'description': 'Moscow, is a beautiful city, a true asian pearl, with crowded streets.',
+    'name': 'Moscow',
+    'pictures': [
+      {
+        'src': 'http://picsum.photos/300/200?r=0.0762563005163317',
+        'description': 'Moscow parliament building'
       }
     ]
   },
@@ -177,22 +228,22 @@ const mockPoints = [
   },
 ];
 
-// function getRandomPoint() {
-//   return getRandomArrayElement(mockPoints);
-// }
+function generateOffers() {
+  return mockOffers;
+}
 
-function getRandomPoint() {
+function generateDestinations() {
+  return mockDestinations;
+}
+
+function generateRandomPoint() {
   const point = getRandomArrayElement(mockPoints);
 
-  point.offers = [getRandomArrayElement(mockOffersByType
+  point.offers = mockOffersByType
     .find((el) => el.type === point.type).offers
-    .map((offer) => (offer.id)))];
+    .map((offer) => (offer.id));
 
   return point;
 }
 
-// const POINT_COUNT = 3;
-// const points = Array.from({length: POINT_COUNT}, getRandomPoint);
-// console.log(points);
-
-export {getRandomPoint};
+export {generateRandomPoint, generateDestinations, generateOffers};

@@ -2,13 +2,26 @@ import {DateFormat} from '../const.js';
 import {createElement} from '../render.js';
 import {humanizePointDate} from '../utils.js';
 
-function createPointTemplate(point) {
+function getOffersTemplate(point, offers) {
 
-  const {basePrice = point.base_price, dateFrom = point.date_from, dateTo = point.date_to, destination, type} = point;
+  return offers.filter((offer) => point.offers.includes(offer.id)).map((el) =>
+    `<li class="event__offer">
+      <span class="event__offer-title">${el.title}</span>
+        &plus;&euro;&nbsp;
+       <span class="event__offer-price">${el.price}</span>
+     </li>`
+  ).join('');
+}
+
+function createPointTemplate(point, destinations, offers) {
+
+  const {basePrice = point.base_price, dateFrom = point.date_from, dateTo = point.date_to, type} = point;
 
   const datePoint = humanizePointDate(dateFrom, DateFormat.DATE_FORMAT);
   const startTime = humanizePointDate(dateFrom, DateFormat.TIME_FORMAT);
   const endTime = humanizePointDate(dateTo, DateFormat.TIME_FORMAT);
+  const destination = destinations.find((el) => el.id === point.destination);
+  const offersList = getOffersTemplate(point, offers);
 
   return (
     `<li class="trip-events__item">
@@ -30,11 +43,7 @@ function createPointTemplate(point) {
       </p>
       <h4 class="visually-hidden">Offers:</h4>
       <ul class="event__selected-offers">
-        <li class="event__offer">
-          <span class="event__offer-title">Order Uber</span>
-          &plus;&euro;&nbsp;
-          <span class="event__offer-price">20</span>
-        </li>
+        ${offersList}
       </ul>
       <button class="event__rollup-btn" type="button">
         <span class="visually-hidden">Open event</span>
@@ -45,12 +54,14 @@ function createPointTemplate(point) {
 }
 
 export default class PointView {
-  constructor({point}) {
+  constructor({point, destinations, offers}) {
     this.point = point;
+    this.destinations = destinations;
+    this.offers = offers;
   }
 
   getTemplate() {
-    return createPointTemplate(this.point);
+    return createPointTemplate(this.point, this.destinations, this.offers);
   }
 
   getElement() {
