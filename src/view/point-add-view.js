@@ -124,26 +124,32 @@ function createPointAddTemplate(offers, destinations, point, offersByType) {
 }
 
 export default class PointAddView {
+  #element = null;
+  #offers = null;
+  #destinations = null;
+  #point = null;
+  #offersByType = null;
+
   constructor({offers, destinations, point, offersByType}) {
-    this.offers = offers;
-    this.destinations = destinations;
-    this.point = point;
-    this.offersByType = offersByType;
+    this.#offers = offers;
+    this.#destinations = destinations;
+    this.#point = point;
+    this.#offersByType = offersByType;
   }
 
-  getTemplate() {
-    return createPointAddTemplate(this.offers, this.destinations, this.point, this.offersByType);
+  get template() {
+    return createPointAddTemplate(this.#offers, this.#destinations, this.#point, this.#offersByType);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
     }
 
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }
