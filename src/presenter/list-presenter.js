@@ -2,6 +2,8 @@ import PointListView from '../view/point-list-view.js';
 import PointEditView from '../view/point-edit-view.js';
 // import PointAddView from '../view/point-add-view.js';
 import PointView from '../view/point-view.js';
+import ListEmptyView from '../view/list-empty-view.js';
+import SortView from '../view/sort-view.js';
 import {render} from '../render.js';
 
 export default class ListPresenter {
@@ -21,18 +23,23 @@ export default class ListPresenter {
     this.#pointsModel = pointsModel;
   }
 
-  init() {
+  init(container) {
     this.#listPoints = [...this.#pointsModel.points];
     this.#destinations = [...this.#pointsModel.destinations];
     this.#offers = [...this.#pointsModel.offers];
     this.#offersByType = [...this.#pointsModel.offersByType];
     // this.#blankPoint = this.#pointsModel.blankPoint;
 
-    render(this.#listComponent, this.#listContainer);
-    // render(new PointAddView({point: this.#blankPoint, destinations: this.#destinations, offers: this.#offers, offersByType: this.#offersByType}), this.#listComponent.element);
+    if (this.#listPoints.length > 0) {
+      render(new SortView(), container);
+      render(this.#listComponent, this.#listContainer);
+      // render(new PointAddView({point: this.#blankPoint, destinations: this.#destinations, offers: this.#offers, offersByType: this.#offersByType}), this.#listComponent.element);
 
-    for (let i = 0; i < this.#listPoints.length; i++) {
-      this.#renderPoint(this.#listPoints[i], this.#destinations, this.#offers, this.#offersByType);
+      for (let i = 0; i < this.#listPoints.length; i++) {
+        this.#renderPoint(this.#listPoints[i], this.#destinations, this.#offers, this.#offersByType);
+      }
+    } else {
+      render(new ListEmptyView(), container);
     }
   }
 
