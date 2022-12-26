@@ -1,5 +1,4 @@
 import FilterView from './view/filter-view.js';
-import SortView from './view/sort-view.js';
 import {render} from './render.js';
 import ListPresenter from './presenter/list-presenter.js';
 import PointsModel from './model/points-model.js';
@@ -13,6 +12,5 @@ const listPresenter = new ListPresenter({listContainer: siteMainSection, pointsM
 
 
 render(new FilterView(), siteFiltersElement);
-render(new SortView(), siteMainSection);
 
-listPresenter.init();
+listPresenter.init(siteMainSection);

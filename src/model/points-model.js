@@ -8,29 +8,29 @@ import {
 const POINT_COUNT = 3;
 
 export default class PointsModel {
-  points = Array.from({length: POINT_COUNT}, generateRandomPoint);
-  destinations = generateDestinations();
-  offers = generateOffers();
-  offersByType = generateOffersByType();
-  blankPoint = generateBlankPoint();
+  #points = Array.from({length: POINT_COUNT}, generateRandomPoint);
+  #destinations = generateDestinations();
+  #offers = generateOffers();
+  #offersByType = generateOffersByType();
+  #blankPoint = generateBlankPoint();
 
-  getDestinations() {
-    return this.destinations;
+  get destinations() {
+    return this.#destinations;
   }
 
-  getOffers() {
-    return this.offers;
+  get offers() {
+    return this.#offers;
   }
 
-  getOffersByType() {
-    return this.offersByType;
+  get offersByType() {
+    return this.#offersByType;
   }
 
-  getPoints() {
-    return this.points;
+  get points() {
+    return this.#points;
   }
 
-  getBlankPoint() {
-    return this.blankPoint;
+  get blankPoint() {
+    return this.#blankPoint;
   }
 }
