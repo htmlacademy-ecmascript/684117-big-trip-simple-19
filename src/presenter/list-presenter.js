@@ -1,10 +1,10 @@
+import {render} from '../framework/render.js';
 import PointListView from '../view/point-list-view.js';
 import PointEditView from '../view/point-edit-view.js';
 // import PointAddView from '../view/point-add-view.js';
 import PointView from '../view/point-view.js';
 import ListEmptyView from '../view/list-empty-view.js';
 import SortView from '../view/sort-view.js';
-import {render} from '../render.js';
 
 export default class ListPresenter {
   #listContainer = null;
@@ -44,44 +44,46 @@ export default class ListPresenter {
   }
 
   #renderPoint(point, destinations, offers, offersByType) {
-    const pointComponent = new PointView({point, destinations, offers});
-    const pointEditComponent = new PointEditView({point, destinations, offers, offersByType});
-
-    const replacePointToForm = () => {
-      this.#listComponent.element.replaceChild(pointEditComponent.element, pointComponent.element);
-    };
-
-    const replaceFormToPoint = () => {
-      this.#listComponent.element.replaceChild(pointComponent.element, pointEditComponent.element);
-    };
-
     const escKeyDownHandler = (evt) => {
       if (evt.key === 'Escape' || evt.key === 'Esc') {
         evt.preventDefault();
-        replaceFormToPoint();
+        replaceFormToPoint.call(this);
         document.removeEventListener('keydown', escKeyDownHandler);
       }
     };
 
-    const closeEditPopupHandler = () => {
-      replaceFormToPoint();
-      pointEditComponent.element.querySelector('.event__rollup-btn').removeEventListener('click',
-        closeEditPopupHandler);
-      document.removeEventListener('keydown', escKeyDownHandler);
-    };
-
-    pointComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
-      replacePointToForm();
-      document.addEventListener('keydown', escKeyDownHandler);
-      pointEditComponent.element.querySelector('.event__rollup-btn').addEventListener('click',
-        closeEditPopupHandler);
+    const pointComponent = new PointView({
+      point,
+      destinations,
+      offers,
+      onEditClick: () => {
+        replacePointToForm.call(this);
+        document.addEventListener('keydown', escKeyDownHandler);
+      }
     });
 
-    pointEditComponent.element.querySelector('.event--edit').addEventListener('submit', (evt) => {
-      evt.preventDefault();
-      replaceFormToPoint();
-      document.removeEventListener('keydown', escKeyDownHandler);
+    const pointEditComponent = new PointEditView({
+      point,
+      destinations,
+      offers,
+      offersByType,
+      onFormSubmit: () => {
+        replaceFormToPoint.call(this);
+        document.removeEventListener('keydown', escKeyDownHandler);
+      },
+      // onFormClick: () => {
+      //   replaceFormToPoint.call(this);
+      //   document.removeEventListener('keydown', escKeyDownHandler);
+      // }
     });
+
+    function replacePointToForm() {
+      this.#listComponent.element.replaceChild(pointEditComponent.element, pointComponent.element);
+    }
+
+    function replaceFormToPoint() {
+      this.#listComponent.element.replaceChild(pointComponent.element, pointEditComponent.element);
+    }
 
     render(pointComponent, this.#listComponent.element);
   }
