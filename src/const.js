@@ -6,4 +6,9 @@ const DateFormat = {
   FORM_DATE_FORMAT: 'YY/MM/DD hh:mm',
 };
 
-export {POINT_TYPES, DateFormat};
+const FilterType = {
+  EVERYTHING: 'everything',
+  FUTURE: 'future',
+};
+
+export {POINT_TYPES, DateFormat, FilterType};
