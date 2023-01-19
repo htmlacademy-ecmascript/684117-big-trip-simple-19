@@ -1,22 +1,24 @@
 import {render} from '../framework/render.js';
 import PointListView from '../view/point-list-view.js';
-import PointEditView from '../view/point-edit-view.js';
 // import PointAddView from '../view/point-add-view.js';
-import PointView from '../view/point-view.js';
 import ListEmptyView from '../view/list-empty-view.js';
 import SortView from '../view/sort-view.js';
+import PointPresenter from './point-presenter.js';
 
 export default class ListPresenter {
   #listContainer = null;
   #pointsModel = null;
 
   #listComponent = new PointListView();
+  #sortComponent = new SortView();
+  #noPointsComponent = new ListEmptyView();
 
   #listPoints = [];
   #destinations = [];
   #offers = [];
   #offersByType = [];
   // #blankPoint = null;
+  #pointPresenter = new Map();
 
   constructor({listContainer, pointsModel}) {
     this.#listContainer = listContainer;
@@ -30,8 +32,34 @@ export default class ListPresenter {
     this.#offersByType = [...this.#pointsModel.offersByType];
     // this.#blankPoint = this.#pointsModel.blankPoint;
 
+    this.#renderPointsList(container);
+  }
+
+  #renderSort(container) {
+    render(this.#sortComponent, container);
+  }
+
+  #renderNoPoints(container) {
+    render(this.#noPointsComponent, container);
+  }
+
+  #renderPoint(point, destinations, offers, offersByType) {
+    const pointPresenter = new PointPresenter({
+      pointListContainer: this.#listComponent.element,
+      onModeChange: this.#handleModeChange
+    });
+
+    pointPresenter.init(point, destinations, offers, offersByType);
+    this.#pointPresenter.set(point.id, pointPresenter);
+  }
+
+  #handleModeChange = () => {
+    this.#pointPresenter.forEach((presenter) => presenter.resetView());
+  };
+
+  #renderPointsList(container) {
     if (this.#listPoints.length > 0) {
-      render(new SortView(), container);
+      this.#renderSort(container);
       render(this.#listComponent, this.#listContainer);
       // render(new PointAddView({point: this.#blankPoint, destinations: this.#destinations, offers: this.#offers, offersByType: this.#offersByType}), this.#listComponent.element);
 
@@ -39,52 +67,7 @@ export default class ListPresenter {
         this.#renderPoint(this.#listPoints[i], this.#destinations, this.#offers, this.#offersByType);
       }
     } else {
-      render(new ListEmptyView(), container);
+      this.#renderNoPoints(container);
     }
-  }
-
-  #renderPoint(point, destinations, offers, offersByType) {
-    const escKeyDownHandler = (evt) => {
-      if (evt.key === 'Escape' || evt.key === 'Esc') {
-        evt.preventDefault();
-        replaceFormToPoint.call(this);
-        document.removeEventListener('keydown', escKeyDownHandler);
-      }
-    };
-
-    const pointComponent = new PointView({
-      point,
-      destinations,
-      offers,
-      onEditClick: () => {
-        replacePointToForm.call(this);
-        document.addEventListener('keydown', escKeyDownHandler);
-      }
-    });
-
-    const pointEditComponent = new PointEditView({
-      point,
-      destinations,
-      offers,
-      offersByType,
-      onFormSubmit: () => {
-        replaceFormToPoint.call(this);
-        document.removeEventListener('keydown', escKeyDownHandler);
-      },
-      // onFormClick: () => {
-      //   replaceFormToPoint.call(this);
-      //   document.removeEventListener('keydown', escKeyDownHandler);
-      // }
-    });
-
-    function replacePointToForm() {
-      this.#listComponent.element.replaceChild(pointEditComponent.element, pointComponent.element);
-    }
-
-    function replaceFormToPoint() {
-      this.#listComponent.element.replaceChild(pointComponent.element, pointEditComponent.element);
-    }
-
-    render(pointComponent, this.#listComponent.element);
   }
 }
