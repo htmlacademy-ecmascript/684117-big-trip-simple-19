@@ -9,6 +9,7 @@ const Mode = {
 
 export default class PointPresenter {
   #pointListContainer = null;
+  #handleDataChange = null;
   #handleModeChange = null;
 
   #pointComponent = null;
@@ -20,8 +21,9 @@ export default class PointPresenter {
   #offersByType = null;
   #mode = Mode.DEFAULT;
 
-  constructor({pointListContainer, onModeChange}) {
+  constructor({pointListContainer, onDataChange, onModeChange}) {
     this.#pointListContainer = pointListContainer;
+    this.#handleDataChange = onDataChange;
     this.#handleModeChange = onModeChange;
   }
 
@@ -65,6 +67,11 @@ export default class PointPresenter {
 
     remove(prevPointComponent);
     remove(prevPointEditComponent);
+  }
+
+  destroy() {
+    remove(this.#pointComponent);
+    remove(this.#pointEditComponent);
   }
 
   resetView() {

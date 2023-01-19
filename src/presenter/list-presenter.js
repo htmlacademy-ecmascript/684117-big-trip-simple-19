@@ -4,6 +4,7 @@ import PointListView from '../view/point-list-view.js';
 import ListEmptyView from '../view/list-empty-view.js';
 import SortView from '../view/sort-view.js';
 import PointPresenter from './point-presenter.js';
+import {updateItem} from '../utils.js';
 
 export default class ListPresenter {
   #listContainer = null;
@@ -18,7 +19,7 @@ export default class ListPresenter {
   #offers = [];
   #offersByType = [];
   // #blankPoint = null;
-  #pointPresenter = new Map();
+  #pointPresenters = new Map();
 
   constructor({listContainer, pointsModel}) {
     this.#listContainer = listContainer;
@@ -35,10 +36,6 @@ export default class ListPresenter {
     this.#renderPointsList(container);
   }
 
-  #renderSort(container) {
-    render(this.#sortComponent, container);
-  }
-
   #renderNoPoints(container) {
     render(this.#noPointsComponent, container);
   }
@@ -46,20 +43,36 @@ export default class ListPresenter {
   #renderPoint(point, destinations, offers, offersByType) {
     const pointPresenter = new PointPresenter({
       pointListContainer: this.#listComponent.element,
-      onModeChange: this.#handleModeChange
+      onDataChange: this.#handlePointChange,
+      onModeChange: this.#handleModeChange,
     });
 
     pointPresenter.init(point, destinations, offers, offersByType);
-    this.#pointPresenter.set(point.id, pointPresenter);
+    this.#pointPresenters.set(point.id, pointPresenter);
   }
 
   #handleModeChange = () => {
-    this.#pointPresenter.forEach((presenter) => presenter.resetView());
+    this.#pointPresenters.forEach((presenter) => presenter.resetView());
   };
+
+  #handlePointChange = (updatedPoint) => {
+    this.#listPoints = updateItem(this.#listPoints, updatedPoint);
+    this.#pointPresenters.get(updatedPoint.id).init(updatedPoint);
+  };
+
+  #renderSort(container) {
+    render(this.#sortComponent, container);
+  }
+
+  #clearPointList() {
+    this.#pointPresenters.forEach((presenter) => presenter.destroy());
+    this.#pointPresenters.clear();
+  }
 
   #renderPointsList(container) {
     if (this.#listPoints.length > 0) {
       this.#renderSort(container);
+
       render(this.#listComponent, this.#listContainer);
       // render(new PointAddView({point: this.#blankPoint, destinations: this.#destinations, offers: this.#offers, offersByType: this.#offersByType}), this.#listComponent.element);
 

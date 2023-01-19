@@ -193,7 +193,7 @@ const mockPoints = [
   {
     'base_price': 1100,
     'date_from': '2022-12-29T22:55:56.845Z',
-    'date_to': '2022-12-29T11:22:13.375Z',
+    'date_to': '2022-12-30T11:22:13.375Z',
     'destination': getRandomArrayElement(mockDestinations).id,
     'id': '1',
     'offers': '',
