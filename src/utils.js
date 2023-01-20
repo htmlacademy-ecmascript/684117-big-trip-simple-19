@@ -12,4 +12,8 @@ function updateItem(items, update) {
   return items.map((item) => item.id === update.id ? update : item);
 }
 
-export {getRandomArrayElement, humanizePointDate, updateItem};
+function getRandomPrice() {
+  return Math.floor(Math.random() * 1000);
+}
+
+export {getRandomArrayElement, humanizePointDate, updateItem, getRandomPrice};
