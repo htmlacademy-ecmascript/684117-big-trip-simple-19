@@ -1,4 +1,4 @@
-import {getRandomArrayElement} from '../utils.js';
+import {getRandomArrayElement, getRandomPrice} from '../utils.js';
 import {POINT_TYPES} from '../const.js';
 
 const mockOffersByType = [
@@ -191,16 +191,16 @@ const mockDestinations = [
 
 const mockPoints = [
   {
-    'base_price': 1100,
+    'base_price': getRandomPrice(),
     'date_from': '2022-12-29T22:55:56.845Z',
-    'date_to': '2022-12-29T11:22:13.375Z',
+    'date_to': '2022-12-30T11:22:13.375Z',
     'destination': getRandomArrayElement(mockDestinations).id,
     'id': '1',
     'offers': '',
     'type': getRandomArrayElement(POINT_TYPES),
   },
   {
-    'base_price': 500,
+    'base_price': getRandomPrice(),
     'date_from': '2023-01-28T11:55:56.845Z',
     'date_to': '2023-01-28T15:22:13.375Z',
     'destination': getRandomArrayElement(mockDestinations).id,
@@ -209,7 +209,7 @@ const mockPoints = [
     'type': getRandomArrayElement(POINT_TYPES),
   },
   {
-    'base_price': 2000,
+    'base_price': getRandomPrice(),
     'date_from': '2020-12-29T10:55:56.845Z',
     'date_to': '2020-12-29T11:22:13.375Z',
     'destination': getRandomArrayElement(mockDestinations).id,
@@ -218,7 +218,7 @@ const mockPoints = [
     'type': getRandomArrayElement(POINT_TYPES),
   },
   {
-    'base_price': 333,
+    'base_price': getRandomPrice(),
     'date_from': '2020-09-10T22:55:56.845Z',
     'date_to': '2020-09-11T21:22:13.375Z',
     'destination': getRandomArrayElement(mockDestinations).id,
