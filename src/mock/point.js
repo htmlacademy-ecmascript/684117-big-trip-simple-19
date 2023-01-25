@@ -192,8 +192,8 @@ const mockDestinations = [
 const mockPoints = [
   {
     'base_price': getRandomPrice(),
-    'date_from': '2022-12-29T22:55:56.845Z',
-    'date_to': '2022-12-30T11:22:13.375Z',
+    'date_from': '2023-12-29T22:55:56.845Z',
+    'date_to': '2023-12-30T11:22:13.375Z',
     'destination': getRandomArrayElement(mockDestinations).id,
     'id': '1',
     'offers': '',
@@ -219,8 +219,26 @@ const mockPoints = [
   },
   {
     'base_price': getRandomPrice(),
-    'date_from': '2020-09-10T22:55:56.845Z',
-    'date_to': '2020-09-11T21:22:13.375Z',
+    'date_from': '2023-09-10T22:55:56.845Z',
+    'date_to': '2023-09-11T21:22:13.375Z',
+    'destination': getRandomArrayElement(mockDestinations).id,
+    'id': '4',
+    'offers': '',
+    'type': getRandomArrayElement(POINT_TYPES),
+  },
+  {
+    'base_price': getRandomPrice(),
+    'date_from': '2022-09-10T22:55:56.845Z',
+    'date_to': '2022-09-11T21:22:13.375Z',
+    'destination': getRandomArrayElement(mockDestinations).id,
+    'id': '5',
+    'offers': '',
+    'type': getRandomArrayElement(POINT_TYPES),
+  },
+  {
+    'base_price': getRandomPrice(),
+    'date_from': '2024-09-10T22:55:56.845Z',
+    'date_to': '2024-09-11T21:22:13.375Z',
     'destination': getRandomArrayElement(mockDestinations).id,
     'id': '4',
     'offers': '',
@@ -229,7 +247,7 @@ const mockPoints = [
 ];
 
 const blankPoint = {
-  'base_price': 333,
+  'base_price': getRandomPrice(),
   'date_from': '2019-09-10T22:55:56.845Z',
   'date_to': '2019-09-11T21:22:13.375Z',
   'destination': getRandomArrayElement(mockDestinations).id,
