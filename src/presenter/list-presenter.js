@@ -1,6 +1,6 @@
 import {render} from '../framework/render.js';
 import PointListView from '../view/point-list-view.js';
-// import PointAddView from '../view/point-add-view.js';
+import PointAddView from '../view/point-add-view.js';
 import ListEmptyView from '../view/list-empty-view.js';
 import SortView from '../view/sort-view.js';
 import PointPresenter from './point-presenter.js';
@@ -19,7 +19,7 @@ export default class ListPresenter {
   #destinations = [];
   #offers = [];
   #offersByType = [];
-  // #blankPoint = null;
+  #blankPoint = null;
   #pointPresenters = new Map();
   #currentSortType = SortType.DAY;
   #sourcedPoints = [];
@@ -35,7 +35,7 @@ export default class ListPresenter {
     this.#destinations = [...this.#pointsModel.destinations];
     this.#offers = [...this.#pointsModel.offers];
     this.#offersByType = [...this.#pointsModel.offersByType];
-    // this.#blankPoint = this.#pointsModel.blankPoint;
+    this.#blankPoint = this.#pointsModel.blankPoint;
 
     this.#renderPointsList(container);
   }
@@ -106,7 +106,7 @@ export default class ListPresenter {
       }
 
       render(this.#listComponent, this.#listContainer);
-      // render(new PointAddView({point: this.#blankPoint, destinations: this.#destinations, offers: this.#offers, offersByType: this.#offersByType}), this.#listComponent.element);
+      render(new PointAddView({point: this.#blankPoint, destinations: this.#destinations, offers: this.#offers, offersByType: this.#offersByType}), this.#listComponent.element);
 
       for (let i = 0; i < this.#listPoints.length; i++) {
         this.#renderPoint(this.#listPoints[i], this.#destinations, this.#offers, this.#offersByType);
