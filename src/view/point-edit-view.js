@@ -1,12 +1,12 @@
-import AbstractView from '../framework/view/abstract-view.js';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import {POINT_TYPES, DateFormat} from '../const.js';
 import {humanizePointDate} from '../utils.js';
 
-function createTypesTemplate(currentType) {
+function createTypesTemplate(currentType, pointId) {
   return POINT_TYPES.map((type) =>
     `<div class="event__type-item">
-      <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}" ${currentType === type ? 'checked' : ''}>
-      <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">${type}</label>
+      <input id="event-type-${type}-${pointId}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}" ${currentType === type ? 'checked' : ''}>
+      <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-${pointId}">${type}</label>
     </div>`
   ).join('');
 }
@@ -16,9 +16,9 @@ function createOffersTemplate(offersByType, point) {
 
   return offers.map((offer) =>
     `<div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.title}-1" type="checkbox" name="event-offer-${offer.title}"
-      ${point.offers.filter((el) => el === offer.id).length > 0 ? 'checked' : ''}>
-      <label class="event__offer-label" for="event-offer-${offer.title}-1">
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.title}-${point.id}" type="checkbox" name="event-offer-${offer.title}"
+      ${point.offers.filter((el) => el === offer.id).length > 0 ? 'checked' : ''} data-offer-id="${offer.id}">
+      <label class="event__offer-label" for="event-offer-${offer.title}-${point.id}">
         <span class="event__offer-title">Add ${offer.title}</span>
         &plus;&euro;&nbsp;
        <span class="event__offer-price">${offer.price}</span>
@@ -28,15 +28,15 @@ function createOffersTemplate(offersByType, point) {
 }
 
 function createDestinationsTemplate(destinations) {
-  return destinations.map((el) => `<option value="${el.name}"></option>`);
+  return destinations.map((el) => `<option value="${el.name}">`).join('');
 }
 
 function createPointEditTemplate(offers, destinations, point, offersByType) {
-  const {basePrice = point.base_price, dateFrom = point.date_from, dateTo = point.date_to, type} = point;
+  const {basePrice = point.base_price, dateFrom = point.date_from, dateTo = point.date_to, type, id} = point;
 
   const startDate = humanizePointDate(dateFrom, DateFormat.FORM_DATE_FORMAT);
   const endDate = humanizePointDate(dateTo, DateFormat.FORM_DATE_FORMAT);
-  const typesTemplate = createTypesTemplate(type);
+  const typesTemplate = createTypesTemplate(type, id);
   const offersTemplate = createOffersTemplate(offersByType, point);
   const destination = destinations.find((el) => el.id === point.destination);
   const destinationTemplate = createDestinationsTemplate(destinations);
@@ -46,11 +46,11 @@ function createPointEditTemplate(offers, destinations, point, offersByType) {
     <form class="event event--edit" action="#" method="post">
       <header class="event__header">
         <div class="event__type-wrapper">
-          <label class="event__type  event__type-btn" for="event-type-toggle-1">
+          <label class="event__type  event__type-btn" for="event-type-toggle-${id}">
             <span class="visually-hidden">Choose event type</span>
-            <img class="event__type-icon" width="17" height="17" src="img/icons/${point.type}.png" alt="Event type icon">
+            <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event type icon">
           </label>
-          <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
+          <input class="event__type-toggle  visually-hidden" id="event-type-toggle-${id}" type="checkbox">
 
           <div class="event__type-list">
             <fieldset class="event__type-group">
@@ -61,11 +61,11 @@ function createPointEditTemplate(offers, destinations, point, offersByType) {
         </div>
 
         <div class="event__field-group  event__field-group--destination">
-          <label class="event__label  event__type-output" for="event-destination-1">
+          <label class="event__label  event__type-output" for="event-destination-${id}">
             ${type}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name}" list="destination-list-1">
-          <datalist id="destination-list-1">
+          <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${destination.name}" list="destination-list-${id}">
+          <datalist id="destination-list-${id}">
             ${destinationTemplate}
           </datalist>
         </div>
@@ -111,7 +111,7 @@ function createPointEditTemplate(offers, destinations, point, offersByType) {
   );
 }
 
-export default class PointEditView extends AbstractView {
+export default class PointEditView extends AbstractStatefulView {
   #offers = null;
   #destinations = null;
   #point = null;
@@ -123,25 +123,73 @@ export default class PointEditView extends AbstractView {
     super();
     this.#offers = offers;
     this.#destinations = destinations;
-    this.#point = point;
+    this._state = point;
+    this.#point = Object.assign({}, point);
     this.#offersByType = offersByType;
     this.#handleFormSubmit = onFormSubmit;
     // this.#handleFormClick = onFormClick;
-
-    this.element.querySelector('.event--edit').addEventListener('submit', this.#formSubmitHandler);
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#formSubmitHandler);
+    this._restoreHandlers();
   }
 
   get template() {
-    return createPointEditTemplate(this.#offers, this.#destinations, this.#point, this.#offersByType);
+    return createPointEditTemplate(this.#offers, this.#destinations, this._state, this.#offersByType);
+  }
+
+  reset(point) {
+    point = this.#point;
+    this.updateElement(point);
+  }
+
+  _restoreHandlers() {
+    this.element.querySelector('.event--edit').addEventListener('submit', this.#formSubmitHandler);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#formSubmitHandler);
+    this.element.querySelector('.event__type-group').addEventListener('change', this.#typePointChangeHandler);
+    this.element.querySelector('.event__input--destination').addEventListener( 'change', this.#destinationChangeHandler);
+    this.element.querySelector('.event__input--price').addEventListener('change', this.#priceChangeHandler);
+    this.element.querySelectorAll('.event__offer-checkbox').forEach((el) => el.addEventListener('click', this.#offersChangeHandler));
   }
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this.#handleFormSubmit(this.#point);
+    this.#handleFormSubmit(this._state);
   };
 
   // #formClickHandler = () => {
   //   this.#handleFormClick();
   // };
+
+  #typePointChangeHandler = (evt) => {
+    evt.preventDefault();
+    if (evt.target.classList.contains('event__type-input')) {
+      this.updateElement({
+        offers: [],
+        type: evt.target.value,
+      });
+    }
+  };
+
+  #destinationChangeHandler = (evt) => {
+    evt.preventDefault();
+    if(this.#destinations.find((el) => el.name === evt.target.value)) {
+      this._state.destination = this.#destinations.find((el) => el.name === evt.target.value).id;
+      this.updateElement({
+        destination: this._state.destination,
+      });
+    }
+  };
+
+  #priceChangeHandler = (evt) => {
+    evt.preventDefault();
+    this._state.basePrice = evt.target.value;
+    this.updateElement({
+      basePrice: this._state.basePrice,
+    });
+  };
+
+  #offersChangeHandler = (evt) => {
+    evt.preventDefault();
+    const offerIdArray = [];
+    this.element.querySelectorAll('.event__offer-checkbox:checked').forEach((el) => {offerIdArray.push(el.dataset.offerId);});
+    this._state.offers = offerIdArray;
+  };
 }
