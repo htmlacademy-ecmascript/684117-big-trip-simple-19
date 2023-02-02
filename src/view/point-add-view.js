@@ -1,6 +1,8 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import {POINT_TYPES, DateFormat} from '../const.js';
 import {humanizePointDate} from '../utils.js';
+import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
 
 function createTypesTemplate(currentType, pointId) {
   return POINT_TYPES.map((type) =>
@@ -128,6 +130,8 @@ export default class PointAddView extends AbstractStatefulView {
   #offers = null;
   #destinations = null;
   #offersByType = null;
+  #datepickerFrom = null;
+  #datepickerTo = null;
 
   constructor({offers, destinations, point, offersByType}) {
     super();
@@ -143,12 +147,18 @@ export default class PointAddView extends AbstractStatefulView {
     return createPointAddTemplate(this.#offers, this.#destinations, this._state, this.#offersByType);
   }
 
+  #reset = () => {
+    this._state = this.#point;
+    this.updateElement(this._state);
+  };
+
   _restoreHandlers() {
     this.element.querySelector('.event__type-group').addEventListener('change', this.#typePointChangeHandler);
     this.element.querySelector('.event__input--destination').addEventListener( 'change', this.#destinationChangeHandler);
     this.element.querySelector('.event__input--price').addEventListener('change', this.#priceChangeHandler);
     this.element.querySelectorAll('.event__offer-checkbox').forEach((el) => el.addEventListener('click', this.#offersChangeHandler));
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#reset);
+    this.#setDatepickers();
   }
 
   #typePointChangeHandler = (evt) => {
@@ -184,8 +194,41 @@ export default class PointAddView extends AbstractStatefulView {
     this._state.offers = offerIdArray;
   };
 
-  #reset = () => {
-    this._state = this.#point;
-    this.updateElement(this._state);
+  #setDatepickers = () => {
+    if(this.element.querySelector(`#event-start-time-${this._state.id}`)) {
+      this.#datepickerFrom = flatpickr(
+        this.element.querySelector(`#event-start-time-${this._state.id}`),
+        {
+          dateFormat: 'y/m/d H:i',
+          defaultDate: this._state.dateFrom,
+          enableTime: true,
+          onChange: this.#dateFromChangeHandler,
+        }
+      );
+    }
+
+    if(this.element.querySelector(`#event-end-time-${this._state.id}`)) {
+      this.#datepickerTo = flatpickr(
+        this.element.querySelector(`#event-end-time-${this._state.id}`),
+        {
+          dateFormat: 'y/m/d H:i',
+          defaultDate: this._state.dateTo,
+          enableTime: true,
+          onChange: this.#dateToChangeHandler,
+        }
+      );
+    }
+  };
+
+  #dateFromChangeHandler = ([userDate]) => {
+    this.updateElement({
+      dateFrom: userDate,
+    });
+  };
+
+  #dateToChangeHandler = ([userDate]) => {
+    this.updateElement({
+      dateTo: userDate,
+    });
   };
 }
