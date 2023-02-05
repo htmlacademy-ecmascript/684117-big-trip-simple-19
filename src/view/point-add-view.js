@@ -18,8 +18,8 @@ function createOffersTemplate(offersByType, point) {
 
   return offers.map((offer) =>
     `<div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.title}-1" type="checkbox" name="event-offer-${offer.title}"
-      ${point.offers.filter((el) => el === offer.id).length > 0 ? 'checked' : ''}>
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.title}-${point.id}" type="checkbox" name="event-offer-${offer.title}"
+      ${point.offers.filter((el) => el === offer.id).length > 0 ? 'checked' : ''} data-offer-id="${offer.id}">
       <label class="event__offer-label" for="event-offer-${offer.title}-${point.id}">
         <span class="event__offer-title">Add ${offer.title}</span>
         &plus;&euro;&nbsp;
@@ -132,14 +132,20 @@ export default class PointAddView extends AbstractStatefulView {
   #offersByType = null;
   #datepickerFrom = null;
   #datepickerTo = null;
+  #handleFormSubmit;
+  #handleFormCancel;
+  _state;
 
-  constructor({offers, destinations, point, offersByType}) {
+  constructor({offers, destinations, point, offersByType, onFormSubmit, onFormCancel}) {
     super();
     this._state = point;
     this.#point = Object.assign({}, point);
     this.#offers = offers;
     this.#destinations = destinations;
     this.#offersByType = offersByType;
+    this.#handleFormSubmit = onFormSubmit;
+    this.#handleFormCancel = onFormCancel;
+
     this._restoreHandlers();
   }
 
@@ -147,18 +153,34 @@ export default class PointAddView extends AbstractStatefulView {
     return createPointAddTemplate(this.#offers, this.#destinations, this._state, this.#offersByType);
   }
 
-  #reset = () => {
-    this._state = this.#point;
-    this.updateElement(this._state);
-  };
-
   _restoreHandlers() {
     this.element.querySelector('.event__type-group').addEventListener('change', this.#typePointChangeHandler);
     this.element.querySelector('.event__input--destination').addEventListener( 'change', this.#destinationChangeHandler);
     this.element.querySelector('.event__input--price').addEventListener('change', this.#priceChangeHandler);
     this.element.querySelectorAll('.event__offer-checkbox').forEach((el) => el.addEventListener('click', this.#offersChangeHandler));
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#reset);
+    this.element.querySelector('.event__save-btn').addEventListener('click', this.#formSubmitHandler);
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formCloseHandler);
     this.#setDatepickers();
+  }
+
+  #reset = () => {
+    this._state = this.#point;
+    this.updateElement(this._state);
+  };
+
+  removeElement() {
+    super.removeElement();
+
+    if(this.#datepickerFrom){
+      this.#datepickerFrom.destroy();
+      this.#datepickerFrom = null;
+    }
+
+    if(this.#datepickerTo){
+      this.#datepickerTo.destroy();
+      this.#datepickerTo = null;
+    }
   }
 
   #typePointChangeHandler = (evt) => {
@@ -178,6 +200,8 @@ export default class PointAddView extends AbstractStatefulView {
       this.updateElement({
         destination: this._state.destination,
       });
+    } else {
+      evt.target.value = '';
     }
   };
 
@@ -230,5 +254,15 @@ export default class PointAddView extends AbstractStatefulView {
     this.updateElement({
       dateTo: userDate,
     });
+  };
+
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFormSubmit(this._state);
+  };
+
+  #formCloseHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFormCancel(this.#point);
   };
 }

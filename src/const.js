@@ -3,7 +3,7 @@ const POINT_TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-i
 const DateFormat = {
   DATE_FORMAT: 'MMM DD',
   TIME_FORMAT: 'HH:mm',
-  FORM_DATE_FORMAT: 'YY/MM/DD hh:mm',
+  FORM_DATE_FORMAT: 'DD/MM/YY hh:mm',
 };
 
 const FilterType = {
@@ -16,4 +16,16 @@ const SortType = {
   PRICE: 'sort-price',
 };
 
-export {POINT_TYPES, DateFormat, FilterType, SortType};
+const UserAction = {
+  UPDATE_POINT: 'UPDATE_POINT',
+  ADD_POINT: 'ADD_POINT',
+  DELETE_POINT: 'DELETE_POINT',
+};
+
+const UpdateType = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR',
+};
+
+export {POINT_TYPES, DateFormat, FilterType, SortType, UserAction, UpdateType};
