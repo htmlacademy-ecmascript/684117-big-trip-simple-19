@@ -2,6 +2,7 @@ import {remove, render, RenderPosition} from '../framework/render.js';
 import PointListView from '../view/point-list-view.js';
 import ListEmptyView from '../view/list-empty-view.js';
 import SortView from '../view/sort-view.js';
+import LoadingView from '../view/loading-view.js';
 import PointPresenter from './point-presenter.js';
 import {sortByDate, sortByPrice} from '../utils.js';
 import {SortType, UserAction, UpdateType, FilterType} from '../const.js';
@@ -14,19 +15,21 @@ export default class ListPresenter {
   #filterModel = null;
 
   #listComponent = new PointListView();
+  #loadingComponent = new LoadingView();
   #sortComponent = null;
   #noPointsComponent = null;
 
-  #destinations = [];
-  #offers = [];
-  #offersByType = [];
-  #blankPoint = null;
+  // #destinations = [];
+  // #offers = [];
+  // #offersByType = [];
+  // #blankPoint = null;
   #addPointComponent = null;
   #pointPresenters = new Map();
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
   #newPointPresenter = null;
   #onNewPointDestroy = null;
+  #isLoading = true;
 
   constructor({listContainer, pointsModel, filterModel, onNewPointDestroy}) {
     this.#listContainer = listContainer;
@@ -40,10 +43,10 @@ export default class ListPresenter {
 
   createPoint() {
     this.#newPointPresenter = new NewPointPresenter({
-      offers: this.#offers,
-      destinations: this.#destinations,
-      point: this.#blankPoint,
-      offersByType: this.#offersByType,
+      // offers: this.#offers,
+      destinations: this.destinations,
+      point: this.blankPoint,
+      offersByType: this.offersByType,
       pointListContainer: this.#listComponent.element,
       onDataChange: this.#handleViewAction,
       onDestroy: this.#onNewPointDestroy,
@@ -51,7 +54,7 @@ export default class ListPresenter {
 
     this.#currentSortType = SortType.DAY;
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
-    this.#newPointPresenter.init(this.#offers, this.#destinations, this.#blankPoint, this.#offersByType);
+    this.#newPointPresenter.init(this.destinations, this.blankPoint, this.offersByType);
   }
 
   get points() {
@@ -68,11 +71,23 @@ export default class ListPresenter {
     return filteredPoints;
   }
 
+  get destinations() {
+    return this.#pointsModel.destinations;
+  }
+
+  get offersByType() {
+    return this.#pointsModel.offersByType;
+  }
+
+  get blankPoint() {
+    return this.#pointsModel.blankPoint;
+  }
+
   init() {
-    this.#destinations = [...this.#pointsModel.destinations];
-    this.#offers = [...this.#pointsModel.offers];
-    this.#offersByType = [...this.#pointsModel.offersByType];
-    this.#blankPoint = this.#pointsModel.blankPoint;
+    // this.#destinations = [...this.#pointsModel.destinations];
+    // this.#offers = [...this.#pointsModel.offers];
+    // this.#offersByType = [...this.#pointsModel.offersByType];
+    // this.#blankPoint = this.#pointsModel.blankPoint;
 
     this.#renderBoard();
   }
@@ -85,14 +100,14 @@ export default class ListPresenter {
     render(this.#noPointsComponent, this.#listContainer, RenderPosition.AFTERBEGIN);
   }
 
-  #renderPoint(point, destinations, offers, offersByType) {
+  #renderPoint(point, destinations, offersByType) {
     const pointPresenter = new PointPresenter({
       pointListContainer: this.#listComponent.element,
       onDataChange: this.#handleViewAction,
       onModeChange: this.#handleModeChange,
     });
 
-    pointPresenter.init(point, destinations, offers, offersByType);
+    pointPresenter.init(point, destinations, offersByType);
     this.#pointPresenters.set(point.id, pointPresenter);
   }
 
@@ -121,7 +136,7 @@ export default class ListPresenter {
   #handleModelEvent = (updateType, point) => {
     switch (updateType) {
       case UpdateType.PATCH:
-        this.#pointPresenters.get(point.id).init(point, this.#offers, this.#destinations, this.#offersByType);
+        this.#pointPresenters.get(point.id).init(point, this.destinations, this.offersByType);
         break;
       case UpdateType.MINOR:
         this.#clearBoard();
@@ -129,6 +144,11 @@ export default class ListPresenter {
         break;
       case UpdateType.MAJOR:
         this.#clearBoard({resetSortType: true});
+        this.#renderBoard();
+        break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
         this.#renderBoard();
         break;
     }
@@ -166,6 +186,7 @@ export default class ListPresenter {
     }
 
     remove(this.#sortComponent);
+    remove(this.#loadingComponent);
 
     if (this.#noPointsComponent) {
       remove(this.#noPointsComponent);
@@ -176,20 +197,51 @@ export default class ListPresenter {
     }
   }
 
-  #renderPointsList() {
+  #renderPointsList(points, destinations, offersByType) {
     render(this.#listComponent, this.#listContainer);
 
-    for (let i = 0; i < this.points.length; i++) {
-      this.#renderPoint(this.points[i], this.#destinations, this.#offers, this.#offersByType);
-    }
+    // for (let i = 0; i < this.points.length; i++) {
+    //   this.#renderPoint(this.points[i], this.destinations, this.offersByType);
+    // }
+
+    points.forEach((point) => this.#renderPoint({point: point, destinations: destinations, offersByType: offersByType}));
   }
 
+  #renderLoading() {
+    render(this.#loadingComponent, this.#listComponent.element);
+  }
+
+  // #renderBoard() {
+  //   if (this.#isLoading) {
+  //     this.#renderLoading();
+  //     return;
+  //   }
+
+  //   if (this.points.length === 0) {
+  //     this.#renderNoPoints();
+  //   } else {
+  //     this.#renderSort();
+  //     this.#renderPointsList();
+  //   }
+  // }
+
   #renderBoard() {
-    if (this.points.length === 0) {
-      this.#renderNoPoints();
-    } else {
-      this.#renderSort();
-      this.#renderPointsList();
+    render(this.#listComponent, this.#listContainer);
+
+    if (this.#isLoading) {
+      this.#renderLoading();
+      return;
     }
+
+    if (this.points.length === 0 && !this.#isLoading ) {
+      this.#renderNoPoints();
+    }
+
+    const points = this.points;
+    const destinations = this.destinations;
+    const offersByType = this.offersByType;
+
+    this.#renderSort();
+    this.#renderPointsList(points, destinations, offersByType);
   }
 }

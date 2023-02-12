@@ -30,7 +30,6 @@ export default class NewPointPresenter {
     }
 
     this.#pointAddComponent = new PointAddView({
-      offers: this.#offers,
       destinations: this.#destinations,
       point: this.#point,
       offersByType: this.#offersByType,
