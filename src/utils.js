@@ -6,14 +6,14 @@ function humanizePointDate(date, format) {
 }
 
 function sortByPrice(pointA, pointB) {
-  if (pointB.base_price > pointA.base_price) {
+  if (pointB.basePrice > pointA.basePrice) {
     return 1;
   }
   return -1;
 }
 
 function sortByDate(pointA, pointB) {
-  return dayjs(pointA.date_from).diff(pointB.date_from);
+  return dayjs(pointA.dateFrom).diff(pointB.dateFrom);
 }
 
 function isDatesEqual(dateA, dateB) {
@@ -21,12 +21,12 @@ function isDatesEqual(dateA, dateB) {
 }
 
 function isPointFuture (date) {
-  return date || dayjs().isAfter(date, 'D');
+  return dayjs().isBefore(date, 'day') || dayjs().isSame(date, 'day');
 }
 
 const filter = {
   [FilterType.EVERYTHING]: (points) => points,
-  [FilterType.FUTURE]: (points) => points.filter((point) => isPointFuture(point.dateFrom) || isPointFuture(point.dataTo)),
+  [FilterType.FUTURE]: (points) => points.filter((point) => isPointFuture(point.dateFrom) || isPointFuture(point.dateTo)),
 };
 
 export {humanizePointDate, sortByDate, sortByPrice, isDatesEqual, filter};
