@@ -127,7 +127,6 @@ function createPointAddTemplate(destinations, point, offersByType) {
 
 export default class PointAddView extends AbstractStatefulView {
   #point = null;
-  // #offers = null;
   #destinations = null;
   #offersByType = null;
   #datepickerFrom = null;
@@ -140,7 +139,6 @@ export default class PointAddView extends AbstractStatefulView {
     super();
     this._state = point;
     this.#point = Object.assign({}, point);
-    // this.#offers = offers;
     this.#destinations = destinations;
     this.#offersByType = offersByType;
     this.#handleFormSubmit = onFormSubmit;

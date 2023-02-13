@@ -19,10 +19,6 @@ export default class ListPresenter {
   #sortComponent = null;
   #noPointsComponent = null;
 
-  // #destinations = [];
-  // #offers = [];
-  // #offersByType = [];
-  // #blankPoint = null;
   #addPointComponent = null;
   #pointPresenters = new Map();
   #currentSortType = SortType.DAY;
@@ -197,36 +193,20 @@ export default class ListPresenter {
     }
   }
 
-  #renderPointsList(points, destinations, offersByType) {
+  #renderPointsList(points) {
     render(this.#listComponent, this.#listContainer);
 
-    // for (let i = 0; i < this.points.length; i++) {
-    //   this.#renderPoint(this.points[i], this.destinations, this.offersByType);
-    // }
-
-    points.forEach((point) => this.#renderPoint({point: point, destinations: destinations, offersByType: offersByType}));
+    for (const point of points) {
+      this.#renderPoint(point, this.destinations, this.offersByType);
+    }
   }
 
   #renderLoading() {
     render(this.#loadingComponent, this.#listComponent.element);
   }
 
-  // #renderBoard() {
-  //   if (this.#isLoading) {
-  //     this.#renderLoading();
-  //     return;
-  //   }
-
-  //   if (this.points.length === 0) {
-  //     this.#renderNoPoints();
-  //   } else {
-  //     this.#renderSort();
-  //     this.#renderPointsList();
-  //   }
-  // }
-
   #renderBoard() {
-    render(this.#listComponent, this.#listContainer);
+    // render(this.#listComponent, this.#listContainer);
 
     if (this.#isLoading) {
       this.#renderLoading();

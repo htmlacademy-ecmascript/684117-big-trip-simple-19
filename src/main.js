@@ -3,10 +3,10 @@ import ListPresenter from './presenter/list-presenter.js';
 import FilterPresenter from './presenter/filter-presenter.js';
 import PointsModel from './model/points-model.js';
 import FilterModel from './model/filter-model.js';
-import NewPointButtonView from './view/new-point-button-view';
-import PointsApiService from './points-api-service';
-import OffersApiService from './offers-api-service';
-import DestinationsApiService from './destinations-api-service';
+import NewPointButtonView from './view/new-point-button-view.js';
+import PointsApiService from './points-api-service.js';
+import OffersApiService from './offers-api-service.js';
+import DestinationsApiService from './destinations-api-service.js';
 
 const siteHeader = document.querySelector('.page-header');
 const siteFiltersElement = siteHeader.querySelector('.trip-controls__filters');

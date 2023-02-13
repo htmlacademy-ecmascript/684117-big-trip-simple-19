@@ -114,7 +114,6 @@ function createPointEditTemplate(destinations, point, offersByType) {
 }
 
 export default class PointEditView extends AbstractStatefulView {
-  // #offers = null;
   #destinations = null;
   #point = null;
   #offersByType = null;
@@ -126,10 +125,9 @@ export default class PointEditView extends AbstractStatefulView {
 
   constructor({destinations, point, offersByType, onFormSubmit, onDeleteClick}) {
     super();
-    // this.#offers = offers;
     this.#destinations = destinations;
-    this._state = point;
     this.#point = Object.assign({}, point);
+    this._state = point;
     this.#offersByType = offersByType;
     this.#handleFormSubmit = onFormSubmit;
     // this.#handleFormClick = onFormClick;
@@ -217,12 +215,6 @@ export default class PointEditView extends AbstractStatefulView {
       offers: [...checkedOffers].map((el) => Number(el.dataset.offerId))
     });
   };
-
-  // #offersChangeHandler = () => {
-  //   const offerIdArray = [];
-  //   this.element.querySelectorAll('.event__offer-checkbox:checked').forEach((el) => {offerIdArray.push(+el.dataset.offerId);});
-  //   this._state.offers = offerIdArray;
-  // };
 
   #setDatepickers = () => {
     if(this.element.querySelector(`#event-start-time-${this._state.id}`)) {
