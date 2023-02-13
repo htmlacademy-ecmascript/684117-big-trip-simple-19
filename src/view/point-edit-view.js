@@ -119,7 +119,6 @@ export default class PointEditView extends AbstractStatefulView {
   #offersByType = null;
   #handleFormSubmit = null;
   #handleDeleteClick;
-  // #handleFormClick = null;
   #datepickerFrom = null;
   #datepickerTo = null;
 
@@ -130,7 +129,6 @@ export default class PointEditView extends AbstractStatefulView {
     this._state = point;
     this.#offersByType = offersByType;
     this.#handleFormSubmit = onFormSubmit;
-    // this.#handleFormClick = onFormClick;
     this.#handleDeleteClick = onDeleteClick;
 
     this._restoreHandlers();
@@ -173,11 +171,6 @@ export default class PointEditView extends AbstractStatefulView {
     evt.preventDefault();
     this.#handleFormSubmit(this._state);
   };
-
-  // #formCloseHandler = (evt) => {
-  //   evt.preventDefault();
-  //   this.#handleCloseClick(this.#point);
-  // };
 
   #typePointChangeHandler = (evt) => {
     evt.preventDefault();

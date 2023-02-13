@@ -39,7 +39,6 @@ export default class ListPresenter {
 
   createPoint() {
     this.#newPointPresenter = new NewPointPresenter({
-      // offers: this.#offers,
       destinations: this.destinations,
       point: this.blankPoint,
       offersByType: this.offersByType,
@@ -80,11 +79,6 @@ export default class ListPresenter {
   }
 
   init() {
-    // this.#destinations = [...this.#pointsModel.destinations];
-    // this.#offers = [...this.#pointsModel.offers];
-    // this.#offersByType = [...this.#pointsModel.offersByType];
-    // this.#blankPoint = this.#pointsModel.blankPoint;
-
     this.#renderBoard();
   }
 
@@ -206,8 +200,6 @@ export default class ListPresenter {
   }
 
   #renderBoard() {
-    // render(this.#listComponent, this.#listContainer);
-
     if (this.#isLoading) {
       this.#renderLoading();
       return;
