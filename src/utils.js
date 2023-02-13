@@ -5,14 +5,6 @@ function humanizePointDate(date, format) {
   return date ? dayjs(date).format(format) : '';
 }
 
-function getRandomArrayElement(items) {
-  return items[Math.floor(Math.random() * items.length)];
-}
-
-function getRandomPrice() {
-  return Math.floor(Math.random() * 1000);
-}
-
 function sortByPrice(pointA, pointB) {
   if (pointB.base_price > pointA.base_price) {
     return 1;
@@ -37,4 +29,4 @@ const filter = {
   [FilterType.FUTURE]: (points) => points.filter((point) => isPointFuture(point.dateFrom) || isPointFuture(point.dataTo)),
 };
 
-export {getRandomArrayElement, humanizePointDate, getRandomPrice, sortByDate, sortByPrice, isDatesEqual, filter};
+export {humanizePointDate, sortByDate, sortByPrice, isDatesEqual, filter};

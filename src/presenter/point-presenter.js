@@ -19,7 +19,6 @@ export default class PointPresenter {
 
   #point = null;
   #destinations = null;
-  #offers = null;
   #offersByType = null;
   #mode = Mode.DEFAULT;
 
@@ -29,10 +28,9 @@ export default class PointPresenter {
     this.#handleModeChange = onModeChange;
   }
 
-  init(point, destinations, offers, offersByType) {
+  init(point, destinations, offersByType) {
     this.#point = point;
     this.#destinations = destinations;
-    this.#offers = offers;
     this.#offersByType = offersByType;
 
     const prevPointComponent = this.#pointComponent;
@@ -41,7 +39,6 @@ export default class PointPresenter {
     this.#pointComponent = new PointView({
       point: this.#point,
       destinations: this.#destinations,
-      offers: this.#offers,
       offersByType: this.#offersByType,
       onEditClick: this.#handleEditClick,
     });
@@ -49,7 +46,6 @@ export default class PointPresenter {
     this.#pointEditComponent = new PointEditView({
       point: this.#point,
       destinations: this.#destinations,
-      offers: this.#offers,
       offersByType: this.#offersByType,
       onFormSubmit: this.#handleFormSubmit,
       // onFormClick: this.#handleFormSubmit,

@@ -2,9 +2,11 @@ import {DateFormat} from '../const.js';
 import AbstractView from '../framework/view/abstract-view.js';
 import {humanizePointDate} from '../utils.js';
 
-function getOffersTemplate(point, offers) {
+function getOffersTemplate(point, offersByType) {
+  const offers = offersByType.filter((offer) => point.type.includes(offer.type))[0].offers
+    .filter((offer) => point.offers.includes(offer.id));
 
-  return offers.filter((offer) => point.offers.includes(offer.id)).map((el) =>
+  return offers.map((el) =>
     `<li class="event__offer">
       <span class="event__offer-title">${el.title}</span>
         &plus;&euro;&nbsp;
@@ -13,14 +15,14 @@ function getOffersTemplate(point, offers) {
   ).join('');
 }
 
-function createPointTemplate(point, destinations, offers) {
+function createPointTemplate(point, destinations, offersByType) {
   const {basePrice = point.base_price, dateFrom = point.date_from, dateTo = point.date_to, type} = point;
 
   const datePoint = humanizePointDate(dateFrom, DateFormat.DATE_FORMAT);
   const startTime = humanizePointDate(dateFrom, DateFormat.TIME_FORMAT);
   const endTime = humanizePointDate(dateTo, DateFormat.TIME_FORMAT);
   const destination = destinations.find((el) => el.id === point.destination);
-  const offersList = getOffersTemplate(point, offers);
+  const offersList = getOffersTemplate(point, offersByType);
 
   return (
     `<li class="trip-events__item">
@@ -55,21 +57,21 @@ function createPointTemplate(point, destinations, offers) {
 export default class PointView extends AbstractView {
   #point = null;
   #destinations = null;
-  #offers = null;
+  #offersByType = null;
   #handleEditClick = null;
 
-  constructor({point, destinations, offers, onEditClick}) {
+  constructor({point, destinations, offersByType, onEditClick}) {
     super();
     this.#point = point;
     this.#destinations = destinations;
-    this.#offers = offers;
+    this.#offersByType = offersByType;
     this.#handleEditClick = onEditClick;
 
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
   }
 
   get template() {
-    return createPointTemplate(this.#point, this.#destinations, this.#offers);
+    return createPointTemplate(this.#point, this.#destinations, this.#offersByType);
   }
 
   #editClickHandler = (evt) => {

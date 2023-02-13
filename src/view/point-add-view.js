@@ -41,7 +41,7 @@ function createDestinationsTemplate(destinations){
   return destinations.map((el) => `<option value="${el.name}"></option>`);
 }
 
-function createPointAddTemplate(offers, destinations, point, offersByType) {
+function createPointAddTemplate(destinations, point, offersByType) {
   const {basePrice = point.base_price, dateFrom = point.date_from, dateTo = point.date_to, type, id} = point;
 
   const startDate = humanizePointDate(dateFrom, DateFormat.FORM_DATE_FORMAT);
@@ -127,7 +127,6 @@ function createPointAddTemplate(offers, destinations, point, offersByType) {
 
 export default class PointAddView extends AbstractStatefulView {
   #point = null;
-  #offers = null;
   #destinations = null;
   #offersByType = null;
   #datepickerFrom = null;
@@ -136,11 +135,10 @@ export default class PointAddView extends AbstractStatefulView {
   #handleFormCancel;
   _state;
 
-  constructor({offers, destinations, point, offersByType, onFormSubmit, onFormCancel}) {
+  constructor({destinations, point, offersByType, onFormSubmit, onFormCancel}) {
     super();
     this._state = point;
     this.#point = Object.assign({}, point);
-    this.#offers = offers;
     this.#destinations = destinations;
     this.#offersByType = offersByType;
     this.#handleFormSubmit = onFormSubmit;
@@ -150,7 +148,7 @@ export default class PointAddView extends AbstractStatefulView {
   }
 
   get template() {
-    return createPointAddTemplate(this.#offers, this.#destinations, this._state, this.#offersByType);
+    return createPointAddTemplate(this.#destinations, this._state, this.#offersByType);
   }
 
   _restoreHandlers() {
@@ -263,6 +261,7 @@ export default class PointAddView extends AbstractStatefulView {
 
   #formCloseHandler = (evt) => {
     evt.preventDefault();
+    this._state = this.#point;
     this.#handleFormCancel(this.#point);
   };
 }

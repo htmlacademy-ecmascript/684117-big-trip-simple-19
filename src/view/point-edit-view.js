@@ -33,7 +33,7 @@ function createDestinationsTemplate(destinations) {
   return destinations.map((el) => `<option value="${el.name}">`).join('');
 }
 
-function createPointEditTemplate(offers, destinations, point, offersByType) {
+function createPointEditTemplate(destinations, point, offersByType) {
   const {basePrice = point.base_price, dateFrom = point.date_from, dateTo = point.date_to, type, id} = point;
 
   const startDate = humanizePointDate(dateFrom, DateFormat.FORM_DATE_FORMAT);
@@ -114,7 +114,6 @@ function createPointEditTemplate(offers, destinations, point, offersByType) {
 }
 
 export default class PointEditView extends AbstractStatefulView {
-  #offers = null;
   #destinations = null;
   #point = null;
   #offersByType = null;
@@ -124,12 +123,11 @@ export default class PointEditView extends AbstractStatefulView {
   #datepickerFrom = null;
   #datepickerTo = null;
 
-  constructor({offers, destinations, point, offersByType, onFormSubmit, onDeleteClick}) {
+  constructor({destinations, point, offersByType, onFormSubmit, onDeleteClick}) {
     super();
-    this.#offers = offers;
     this.#destinations = destinations;
-    this._state = point;
     this.#point = Object.assign({}, point);
+    this._state = point;
     this.#offersByType = offersByType;
     this.#handleFormSubmit = onFormSubmit;
     // this.#handleFormClick = onFormClick;
@@ -139,7 +137,7 @@ export default class PointEditView extends AbstractStatefulView {
   }
 
   get template() {
-    return createPointEditTemplate(this.#offers, this.#destinations, this._state, this.#offersByType);
+    return createPointEditTemplate(this.#destinations, this._state, this.#offersByType);
   }
 
   removeElement() {
@@ -156,9 +154,8 @@ export default class PointEditView extends AbstractStatefulView {
     }
   }
 
-  reset(point) {
-    point = this.#point;
-    this.updateElement(point);
+  reset() {
+    this.updateElement(this.#point);
   }
 
   _restoreHandlers() {
@@ -213,9 +210,10 @@ export default class PointEditView extends AbstractStatefulView {
   };
 
   #offersChangeHandler = () => {
-    const offerIdArray = [];
-    this.element.querySelectorAll('.event__offer-checkbox:checked').forEach((el) => {offerIdArray.push(+el.dataset.offerId);});
-    this._state.offers = offerIdArray;
+    const checkedOffers = document.querySelectorAll('.event__offer-checkbox:checked');
+    this._setState({
+      offers: [...checkedOffers].map((el) => Number(el.dataset.offerId))
+    });
   };
 
   #setDatepickers = () => {
@@ -258,6 +256,7 @@ export default class PointEditView extends AbstractStatefulView {
 
   #formDeleteHandler = (evt) => {
     evt.preventDefault();
+    this._state = this.#point;
     this.#handleDeleteClick(this.#point);
   };
 }
