@@ -48,7 +48,6 @@ export default class PointPresenter {
       destinations: this.#destinations,
       offersByType: this.#offersByType,
       onFormSubmit: this.#handleFormSubmit,
-      // onFormClick: this.#handleFormSubmit,
       onDeleteClick: this.#handleDeleteClick,
     });
 

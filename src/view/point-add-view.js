@@ -222,7 +222,7 @@ export default class PointAddView extends AbstractStatefulView {
         this.element.querySelector(`#event-start-time-${this._state.id}`),
         {
           dateFormat: 'y/m/d H:i',
-          defaultDate: this._state.dateFrom,
+          defaultDate: this._state.id.dateFrom,
           enableTime: true,
           onChange: this.#dateFromChangeHandler,
         }
@@ -234,7 +234,7 @@ export default class PointAddView extends AbstractStatefulView {
         this.element.querySelector(`#event-end-time-${this._state.id}`),
         {
           dateFormat: 'y/m/d H:i',
-          defaultDate: this._state.dateTo,
+          defaultDate: this._state.id.dateTo,
           enableTime: true,
           onChange: this.#dateToChangeHandler,
         }
